@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddInfrastructure();
-builder.Services.AddApplicationMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
+builder.Services.AddApplication();
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

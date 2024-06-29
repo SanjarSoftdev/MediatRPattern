@@ -1,17 +1,15 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace MediatRPattern.Application
 {
+    using MediatR;
+
     public static class DependencyInjection
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            return services;
-        }
-
-        public static IServiceCollection AddApplicationMediatR(this IServiceCollection services, Action<MediatRServiceConfiguration> action)
-        {
-            services.AddMediatR(action);
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
             return services;
         }
     }

@@ -1,5 +1,6 @@
 using MediatR;
 using MediatRPattern.Application.UseCases.Book.Commands;
+using MediatRPattern.Application.UseCases.Book.Queries;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediatRPattern.Api.Controllers
@@ -21,6 +22,14 @@ namespace MediatRPattern.Api.Controllers
             await mediator.Send(command);
 
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetBooks()
+        {
+            var result = await mediator.Send(new GetBookQuery());
+
+            return Ok(result);
         }
     }
 }

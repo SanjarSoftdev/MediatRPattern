@@ -3,6 +3,9 @@ using MediatRPattern.Application.Abstractions;
 
 namespace MediatRPattern.Application.UseCases.Book.Commands
 {
+    using MediatRPattern.Application.Notifications;
+    using MediatRPattern.Domain.Entities;
+
     public class CreateBookCommand : IRequest
     {
         public string Title { get; set; }
@@ -12,16 +15,33 @@ namespace MediatRPattern.Application.UseCases.Book.Commands
 
     public class CreateBookCommandHandler : IRequestHandler<CreateBookCommand>
     {
-        private readonly IApplicationDBContext _context;
+        private readonly IApplicationDBContext context;
+        private readonly IMediator mediator;
 
-        public CreateBookCommandHandler(IApplicationDBContext context)
+        public CreateBookCommandHandler(IApplicationDBContext context, IMediator mediator)
         {
-            _context = context;
+            this.context = context;
+            this.mediator = mediator;
         }
 
-        public Task Handle(CreateBookCommand request, CancellationToken cancellationToken)
+        public async Task Handle(CreateBookCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var book = new Book()
+            {
+                Title = request.Title,
+                Description = request.Description,
+                Author = request.Author,
+            };
+            context.Books.Add(book);
+            await context.SaveChangesAsync();
+
+            await mediator.Publish(new BookCreatedNotification()
+            {
+                Id = book.Id,
+                Title = request.Title,
+                Description = request.Description,
+                Author = request.Author,
+            });
         }
     }
 }
